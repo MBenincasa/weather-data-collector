@@ -1,6 +1,6 @@
 package io.github.mbenincasa.weatherdatacollector.step;
 
-import io.github.mbenincasa.weatherdatacollector.domain.City;
+import io.github.mbenincasa.weatherdatacollector.dto.CityDTO;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,20 +16,20 @@ public class StepReader {
     private final EntityManagerFactory entityManagerFactory;
 
     @Bean
-    public JpaCursorItemReader<City> jpaCursorItemReader() {
-        JpaCursorItemReader<City> reader = new JpaCursorItemReader<>() {
+    public JpaCursorItemReader<CityDTO> jpaCursorItemReader() {
+        JpaCursorItemReader<CityDTO> reader = new JpaCursorItemReader<>() {
             @Override
-            protected City doRead() {
-                City city = super.doRead();
-                if (city != null)
-                    log.info("[READER] - {}", city.getName());
-                return city;
+            protected CityDTO doRead() {
+                var cityDto = super.doRead();
+                if (cityDto != null)
+                    log.info("[READER] - {}", cityDto);
+                return cityDto;
             }
         };
 
         reader.setName("jpaCursorItemReader");
         reader.setEntityManagerFactory(entityManagerFactory);
-        reader.setQueryString("SELECT c FROM City c");
+        reader.setQueryString("SELECT new io.github.mbenincasa.weatherdatacollector.dto.CityDTO(c.id, c.name, c.lat, c.lon, c.country, c.state) FROM City c");
 
         return reader;
     }

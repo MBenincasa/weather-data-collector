@@ -1,15 +1,22 @@
 package io.github.mbenincasa.weatherdatacollector.step;
 
-import io.github.mbenincasa.weatherdatacollector.domain.City;
+import io.github.mbenincasa.weatherdatacollector.client.OpenWeatherClient;
+import io.github.mbenincasa.weatherdatacollector.dto.CityDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 
 @Slf4j
-public class StepProcessor implements ItemProcessor<City, String> {
+@RequiredArgsConstructor
+public class StepProcessor implements ItemProcessor<CityDTO, String> {
+
+    private final OpenWeatherClient openWeatherClient;
 
     @Override
-    public String process(City item) {
-        log.info("[PROCESSOR] - {}", item.getName());
-        return item.getName();
+    public String process(CityDTO cityDto) {
+        log.info("[PROCESSOR] - {}", cityDto);
+        var response = openWeatherClient.getCurrentWeather(cityDto);
+        log.info("[PROCESSOR RESPONSE] - {}", response);
+        return cityDto.getName();
     }
 }

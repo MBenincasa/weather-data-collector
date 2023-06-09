@@ -1,6 +1,7 @@
 package io.github.mbenincasa.weatherdatacollector.config;
 
-import io.github.mbenincasa.weatherdatacollector.domain.City;
+import io.github.mbenincasa.weatherdatacollector.client.OpenWeatherClient;
+import io.github.mbenincasa.weatherdatacollector.dto.CityDTO;
 import io.github.mbenincasa.weatherdatacollector.step.StepProcessor;
 import io.github.mbenincasa.weatherdatacollector.step.StepWriter;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +21,13 @@ public class StepConfig {
 
     private final PlatformTransactionManager transactionManager;
     private final JobRepository jobRepository;
-    private final JpaCursorItemReader<City> jpaCursorItemReader;
+    private final JpaCursorItemReader<CityDTO> jpaCursorItemReader;
+    private final OpenWeatherClient openWeatherClient;
 
     @Bean
     public Step step() {
         return new StepBuilder("step", jobRepository)
-                .<City, String>chunk(2, transactionManager)
+                .<CityDTO, String>chunk(2, transactionManager)
                 .reader(jpaCursorItemReader)
                 .processor(processor())
                 .writer(writer())
@@ -33,8 +35,8 @@ public class StepConfig {
     }
 
     @Bean
-    public ItemProcessor<City, String> processor() {
-        return new StepProcessor();
+    public ItemProcessor<CityDTO, String> processor() {
+        return new StepProcessor(openWeatherClient);
     }
 
     @Bean
