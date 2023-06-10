@@ -22,7 +22,7 @@ public class StepReader {
             protected CityDTO doRead() {
                 var cityDto = super.doRead();
                 if (cityDto != null)
-                    log.info("[READER] - {}", cityDto);
+                    log.debug("[READER] - {}", cityDto);
                 return cityDto;
             }
         };
