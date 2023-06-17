@@ -4,6 +4,7 @@ import io.github.mbenincasa.weatherdatacollector.domain.City;
 import io.github.mbenincasa.weatherdatacollector.domain.WeatherData;
 import io.github.mbenincasa.weatherdatacollector.dto.CityDTO;
 import io.github.mbenincasa.weatherdatacollector.dto.WeatherDataDTO;
+import io.github.mbenincasa.weatherdatacollector.dto.WeatherDataReportDTO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,6 +22,21 @@ public class Mapper {
                 .rain(wd.getRain())
                 .snow(wd.getSnow())
                 .city(toCityDTO(wd.getCity()))
+                .build();
+    }
+
+    public WeatherDataReportDTO toWeatherDataReportDTO(WeatherData wd) {
+        return WeatherDataReportDTO.builder()
+                .id(wd.getId())
+                .date(wd.getDate())
+                .weather(wd.getWeather())
+                .temp(wd.getTemp())
+                .humidity(wd.getHumidity())
+                .pressure(wd.getPressure())
+                .wind(wd.getWind())
+                .rain(wd.getRain())
+                .snow(wd.getSnow())
+                .city(toCityDTO(wd.getCity()).getName())
                 .build();
     }
 
