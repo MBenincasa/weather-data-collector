@@ -20,7 +20,7 @@ public class SchedulerConfig {
     private final Job job;
     private final JobLauncher jobLauncher;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "${scheduler.cron-job}")
     public void runJob() {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))

@@ -1,10 +1,10 @@
 package io.github.mbenincasa.weatherdatacollector.step;
 
 import io.github.mbenincasa.weatherdatacollector.client.OpenWeatherClient;
-import io.github.mbenincasa.weatherdatacollector.domain.City;
 import io.github.mbenincasa.weatherdatacollector.domain.WeatherData;
 import io.github.mbenincasa.weatherdatacollector.dto.CityDTO;
 import io.github.mbenincasa.weatherdatacollector.dto.response.CurrentWeatherResponse;
+import io.github.mbenincasa.weatherdatacollector.mapper.Mapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class StepProcessor implements ItemProcessor<CityDTO, WeatherData> {
 
     private final OpenWeatherClient openWeatherClient;
+    private final Mapper mapper;
 
     @Override
     public WeatherData process(CityDTO cityDto) {
@@ -47,18 +48,7 @@ public class StepProcessor implements ItemProcessor<CityDTO, WeatherData> {
                 .snow(data.getSnow() == null
                         ? null
                         : data.getSnow().getOneHour())
-                .city(toCity(cityDto))
-                .build();
-    }
-
-    private City toCity(CityDTO cityDto) {
-        return City.builder()
-                .id(cityDto.getId())
-                .lat(cityDto.getLat())
-                .lon(cityDto.getLon())
-                .state(cityDto.getState())
-                .name(cityDto.getName())
-                .country(cityDto.getCountry())
+                .city(mapper.toCity(cityDto))
                 .build();
     }
 }
